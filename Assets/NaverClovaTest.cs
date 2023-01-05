@@ -6,9 +6,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
-using static NaverClova;
 
-public class NaverClova : MonoBehaviour
+public class NaverClovaTest : MonoBehaviour
 {
     [System.Serializable]
     public class JsonData
@@ -31,41 +30,27 @@ public class NaverClova : MonoBehaviour
         }
     }
 
-    string requestBody = File.ReadAllText("C:/Users/vit00/Documents/GitHub/SeniorCareAIChatbot/Assets/ChatbotTest2.json");
+    // 사용할 언어(Kor)를 맨 뒤에 붙임
+    string requestBody = File.ReadAllText("C:/Users/vit00/Documents/GitHub/SeniorCareAIChatbot/Assets/ChatbotTest.json");
 
     //자동연결
-    //string url = "https://t8vrg6872n.apigw.ntruss.com/custom/v1/8884/ea8522784a27e36e40edd71fc571bd4b714346e4d279922e8b04627b1c56e09b";
-    string url = "https://t8vrg6872n.apigw.ntruss.com/custom/v1/";
-    //string url = "https://o1s61nqdxh.apigw.ntruss.com/custom/v1/8712/35e51b8deb90593be336d670812252f3f179ed1eca5dcb8504f3d460f7212830";
+    string url = "https://t8vrg6872n.apigw.ntruss.com/custom/v1/8884/ea8522784a27e36e40edd71fc571bd4b714346e4d279922e8b04627b1c56e09b";
+    //string url = "https://t8vrg6872n.apigw.ntruss.com/custom/v1/";  
 
     //Key
     string secretKey1 = "ZmZoS3lhdmllUmFlRmNPcnJWcENZTVdjUFVNcFNwUE0=";
-    string requestBody2 = "";
-
-    // timestamp 생성
-    static DateTime timeStamp = DateTime.UtcNow;
-    static TimeSpan timeSpan = (timeStamp - new DateTime(1970, 1, 1, 0, 0, 0));
-    long hmac_timeStamp = (long)timeSpan.TotalMilliseconds;
 
     void Start()
     {
-        JsonData jsonData1 = new JsonData();
-        jsonData1 = JsonUtility.FromJson<JsonData>(requestBody);
-        jsonData1.timestamp = hmac_timeStamp;
-        jsonData1.printJsonData();
-        File.WriteAllText("C:/Users/vit00/Documents/GitHub/SeniorCareAIChatbot/Assets/ChatbotTestVer.json", JsonUtility.ToJson(jsonData1));
-        requestBody2 = File.ReadAllText("C:/Users/vit00/Documents/GitHub/SeniorCareAIChatbot/Assets/ChatbotTestVer.json");
-
-        Debug.Log("requestBody : " + requestBody2);
-        Debug.Log("url : " + url);
-        Debug.Log("secretKey : " +  secretKey1);
-        StartCoroutine(Post(url));
+        Debug.Log(requestBody);
+        Debug.Log(url);
+        Debug.Log(secretKey1);
     }
 
-    //void Update()
-    //{
-    //    StartCoroutine(Post(url));
-    //}
+    void Update()
+    {
+        StartCoroutine(Post(url));
+    }
 
     // HMAC 생성 함수
     private string GenerateHMAC(string key, string payload)
@@ -73,16 +58,10 @@ public class NaverClova : MonoBehaviour
         // 키 생성
         var hmac_key = Encoding.UTF8.GetBytes(key);
 
-        //// timestamp 생성
-        //var timeStamp = DateTime.UtcNow;
-        //var timeSpan = (timeStamp - new DateTime(1970, 1, 1, 0, 0, 0));
-        //var hmac_timeStamp = (long)timeSpan.TotalMilliseconds;
-
-        //JsonData jsonData2 = new JsonData();
-        //jsonData2 = JsonUtility.FromJson<JsonData>(requestBody);
-        //jsonData2.printJsonData();
-        //jsonData2.timestamp = timeStamp;
-        ////File.WriteAllText("C:/Users/vit00/Documents/GitHub/SeniorCareAIChatbot/Assets/ChatbotTestVer.json", JsonUtility.ToJson(jsonData2));
+        // timestamp 생성
+        var timeStamp = DateTime.UtcNow;
+        var timeSpan = (timeStamp - new DateTime(1970, 1, 1, 0, 0, 0));
+        var hmac_timeStamp = (long)timeSpan.TotalMilliseconds;
 
         // HMAC-SHA256 객체 생성
         using (HMACSHA256 sha = new HMACSHA256(hmac_key))
@@ -110,7 +89,7 @@ public class NaverClova : MonoBehaviour
         WWWForm form = new WWWForm();
         UnityWebRequest request = UnityWebRequest.Post(url, form);
 
-        string signatureBody = GenerateHMAC(secretKey1, requestBody2);
+        string signatureBody = GenerateHMAC(secretKey1, requestBody);
         Debug.Log("signatureBody : " + signatureBody);
 
         // 챗봇 요청을 위한 request header 설정
@@ -130,11 +109,11 @@ public class NaverClova : MonoBehaviour
             // json 형태로 받음 {"text":"인식결과"}
             string message = request.downloadHandler.text;
             Debug.Log(message);
-            JsonData jsonData3 = JsonUtility.FromJson<JsonData>(message);
-            jsonData3.printJsonData();
+            JsonData jsonData = JsonUtility.FromJson<JsonData>(message);
+            jsonData.printJsonData();
 
             // Voice Server responded: 인식결과
-            Debug.Log("ClovaChatbot Server responded: " + jsonData3.events);
+            Debug.Log("ClovaChatbot Server responded: " + jsonData.events);
         }
     }
 }

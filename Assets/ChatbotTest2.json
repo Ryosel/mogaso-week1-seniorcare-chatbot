@@ -1,0 +1,10 @@
+{
+"version": "v2",
+"userId": "vit0007",
+"userIp": "8.8.8.8",
+"timestamp": 12345678,
+"bubbles": [ {
+"type": "text",
+"data" : { "description" : "postback text of welcome action" } } ],
+"events": "open"
+}
