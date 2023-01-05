@@ -132,6 +132,7 @@ public class NaverClova : MonoBehaviour
             Debug.Log(message);
             JsonData jsonData3 = JsonUtility.FromJson<JsonData>(message);
             jsonData3.printJsonData();
+            File.WriteAllText("C:/Users/vit00/Documents/GitHub/SeniorCareAIChatbot/Assets/ChatbotTestVer.json", JsonUtility.ToJson(jsonData3));
 
             // Voice Server responded: 인식결과
             Debug.Log("ClovaChatbot Server responded: " + jsonData3.events);

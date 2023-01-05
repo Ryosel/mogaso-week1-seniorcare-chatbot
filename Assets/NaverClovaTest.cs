@@ -34,8 +34,7 @@ public class NaverClovaTest : MonoBehaviour
     string requestBody = File.ReadAllText("C:/Users/vit00/Documents/GitHub/SeniorCareAIChatbot/Assets/ChatbotTest.json");
 
     //자동연결
-    string url = "https://t8vrg6872n.apigw.ntruss.com/custom/v1/8884/ea8522784a27e36e40edd71fc571bd4b714346e4d279922e8b04627b1c56e09b";
-    //string url = "https://t8vrg6872n.apigw.ntruss.com/custom/v1/";  
+    string url = "https://t8vrg6872n.apigw.ntruss.com/custom/v1/";
 
     //Key
     string secretKey1 = "ZmZoS3lhdmllUmFlRmNPcnJWcENZTVdjUFVNcFNwUE0=";
