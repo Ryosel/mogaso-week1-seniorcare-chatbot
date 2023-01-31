@@ -13,30 +13,29 @@ public class NaverClova : MonoBehaviour
     [System.Serializable]
     public class JsonData
     {
-        public string version;
+        //public string version;
         public string userId;
-        public string userIp;
+        //public string userIp;
         public long timestamp;
         public string[] bubbles;
         public string events;
 
         public void printJsonData()
         {
-            Debug.Log("version : " + version);
+            //Debug.Log("version : " + version);
             Debug.Log("userId : " + userId);
-            Debug.Log("userIp : " + userIp);
+            //Debug.Log("userIp : " + userIp);
             Debug.Log("timestamp : " + timestamp);
             Debug.Log("bubbles : " + bubbles);
             Debug.Log("event : " + events);
         }
     }
 
-    string requestBody = File.ReadAllText("C:/Users/vit00/Documents/GitHub/SeniorCareAIChatbot/Assets/ChatbotTest2.json");
+    string requestBody = File.ReadAllText("C:/Users/vit00/Documents/GitHub/SeniorCareAIChatbot/Assets/ChatbotTest3.json");
 
-    //자동연결
-    //string url = "https://t8vrg6872n.apigw.ntruss.com/custom/v1/8884/ea8522784a27e36e40edd71fc571bd4b714346e4d279922e8b04627b1c56e09b";
-    string url = "https://t8vrg6872n.apigw.ntruss.com/custom/v1/";
-    //string url = "https://o1s61nqdxh.apigw.ntruss.com/custom/v1/8712/35e51b8deb90593be336d670812252f3f179ed1eca5dcb8504f3d460f7212830";
+    //API Gateway 자동/수동연결(Domain 8712)
+    //string url = "https://o1s61nqdxh.apigw.ntruss.com/custom/v1/"; //error(result) code : 300(URL Not Found)
+    string url = "https://o1s61nqdxh.apigw.ntruss.com/custom/v1/8712/35e51b8deb90593be336d670812252f3f179ed1eca5dcb8504f3d460f7212830"; //error(result) code : 99
 
     //Key
     string secretKey1 = "ZmZoS3lhdmllUmFlRmNPcnJWcENZTVdjUFVNcFNwUE0=";
@@ -59,13 +58,12 @@ public class NaverClova : MonoBehaviour
         Debug.Log("requestBody : " + requestBody2);
         Debug.Log("url : " + url);
         Debug.Log("secretKey : " +  secretKey1);
-        StartCoroutine(Post(url));
     }
 
-    //void Update()
-    //{
-    //    StartCoroutine(Post(url));
-    //}
+    void Update()
+    {
+        StartCoroutine(Post(url));
+    }
 
     // HMAC 생성 함수
     private string GenerateHMAC(string key, string payload)
@@ -92,7 +90,7 @@ public class NaverClova : MonoBehaviour
             // 타임스탬프와 본문의 내용을 합하여 사용하는 경우가 일반적이다.
             // 타임스탬프 값을 이용해 호출, 응답 시간의 차이를 구해 invalid를 하거나 accepted를 하는 방식으로 사용가능하다.
             // 예시에서는 (본문 + 타임스탬프)이지만, 구글링을 통해 찾아보면 (본문 + "^" + 타임스탬프) 등의 방법을 취한다.
-            var bytes = Encoding.UTF8.GetBytes(payload + hmac_timeStamp);
+            var bytes = Encoding.UTF8.GetBytes(payload + "\n" + hmac_timeStamp);
             string base64 = Convert.ToBase64String(bytes);
             var message = Encoding.UTF8.GetBytes(base64);
 
